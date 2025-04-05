@@ -20,6 +20,4 @@ CLASS_STATS={   "Mage":{"health":2,"attack":1,"magic":4,"speed":3,
                                     0:("heal","hl",15,15,"mgc"),
                                     3:("meditate","spc",10,5,"mgc",meditate),
                                     5:("leaf storm","spc",5,30,"mgc",leaf_storm)}},
-                                    
-                  "Cleric":{"health":6,"attack":0.5,"magic":3,"speed":0.5,
-                            "moves":{0:("holy fire","dmg")}}                  }
+            }
