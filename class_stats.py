@@ -5,7 +5,7 @@ from class_functions import *
 CLASS_STATS={   "Mage":{"health":2,"attack":1,"magic":4,"speed":3,
                              #format unlocklvl:(name,value,magic cost,multi,function)
 
-                        "moves":[0,("fire bolt",10,50,"mgc",dmg),
+                        "moves":[0,("fire bolt",10,5,"mgc",dmg),
                               0,('heal',5,15,"mgc",heal),
                               3,("fire ball",25,60,"mgc",dmg),
                               5,('invisibilty',5,40,"mgc",invis)]},

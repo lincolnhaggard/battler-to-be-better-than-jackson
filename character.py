@@ -41,7 +41,7 @@ class Character:
         self.dodge=0#chance to dodge
         self.d_timer=0#time left before dodge becomes zero
         self.dmg_reduce=0#amount to reduce damage by
-        self.dmg=0#damage to deal to the enemy
+        self.damage=0#damage to deal to the enemy
         self.unblockable=False#if the damage to the enemy is unblockable
         self.stuned=False#if stunned and will skip turn
         self.bonus=0#adds x damage to next attack
@@ -63,9 +63,48 @@ class Character:
         else:
             print("Not enough mana, you should not be able to see this mesage")
             input(">")
+        print(self.damage)
+        if self.damage>0:
+            total_damage=0
+            dodged_count=0
+            hit_count=0
+            if self.multi_hit<=1:
+                self.multi_hit=1
+            for i in range(self.multi_hit):
+                if (self.unblockable or random.randint(1,100)>other.dodge):
+                    if not self.unblockable:
+                        self.damage-=other.dmg_reduce
+                    self.damage+=self.bonus
+                    hit_count+=1
+                    if self.damage<=0:
+                        self.damage=0
+                    total_damage+=self.damage
+                    other.health-=self.damage
+                else:
+                    dodged_count+=1
+            if self.multi_hit>1:
+                if hit_count>1:
+                    print(f"You hit the enemy {hit_count} times for a total of {total_damage} damge")
+                    if dodged_count>0:
+                        print(f"The enemy dodge {dodged_count} of your attacks")
+                elif hit_count==1:
+                    print(f"You hit the enemy {hit_count} time for a total of {total_damage} damge")
+                    if dodged_count>0:
+                        print(f"The enemy dodge {dodged_count} of your attacks")
+                else:
+                    print("The enemy dodge all of your attacks")
+            else:
+                if dodged_count==1:
+                    print("The enemy dodged")
+                else:
+                    print(f"You hit the enemy for {total_damage} damage")
 
     def choose_move(self,other,isbot):
         if isbot:
+            chioces=[]
+            for i in self.moves:
+                if i[2]<self.mana:
+                    pass
             return random.choice(list(self.moves))
         else:
             attacks=""
@@ -117,7 +156,7 @@ f"""---------------------------------------
                             return ("struggle",5,None,"atk",strgl)
                         else:
                             n=0/0
-                    if self.mana<self.moves[user-1][2]:
+                    if self.moves[user-1][2]!=None and self.mana<self.moves[user-1][2]:
                         n=0/0
                     return self.moves[user-1]
                 except:
