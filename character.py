@@ -2,11 +2,13 @@ import random
 import math
 from basics import *
 from class_stats import CLASS_STATS
+from class_functions import strgl
 
 MOVE_VALUES={"name":0,'typ':1,"value":2,"cost":3,"multi":4,"func":5}
 
 NAMES=readfile("names.txt")
 
+ABRIVES={"atk":"attack","spd":"speed","mgc":"magic","dmg":"attack"}
 
 
 class Character:
@@ -26,9 +28,9 @@ class Character:
     def start_battle(self):
         #defines and resets all the attributes used in battle
         self.maxhealth=math.floor(25*self.level*self.stats["health"])
-        self.maxmagic=math.floor(8.5*self.level*self.stats["magic"])
+        self.maxmana=math.floor(8.5*self.level*self.stats["magic"])
         self.health=self.maxhealth
-        self.magic=self.maxmagic
+        self.mana=self.maxmana
         self.speed=math.floor(self.level+self.stats["speed"])#it is meant to be addition
         self.moves=[]
         for x,move in enumerate(self.stats["moves"]):
@@ -47,27 +49,59 @@ class Character:
 
 
     def attack(self,other,isbot):
-        self.choose_move(other,isbot)
+        move=self.choose_move(other,isbot)
+        #0 name
+        #1 value
+        #2 mana cost
+        #3 multi
+        #4 function
+        if move[2]==None: 
+            move[4](self,move[1]*self.stats[ABRIVES[move[3]]],other)
+        elif move[2]<self.mana:
+            self.mana-=move[2]
+            move[4](self,move[1]*self.stats[ABRIVES[move[3]]],other)
+        else:
+            print("Not enough mana, you should not be able to see this mesage")
+            input(">")
 
     def choose_move(self,other,isbot):
         if isbot:
             return random.choice(list(self.moves))
         else:
             attacks=""
+            struggle=True
             for x,move in enumerate(self.moves):
                 if x%2==0 and x!=0:
                     attacks+="\n"
-                attacks+=f"{x+1}.{move[0]}{" "*(10-len(move[0]))}"
+                mana=""
+                manalen=0
+                if move[2]!=None:
+                    if move[2]>self.mana:
+                        mana=clr(f"M:{move[2]}",50,25,25,)
+                        manalen=len(f"M:{move[2]}")
+                    else:
+                        mana=f"M:{move[2]}"
+                        manalen=len(f"M:{move[2]}")
+                        struggle=False
+                else:
+                    struggle=False
+                attacks+=f"{x+1}.{move[0]}{" "*(15-len(move[0])-manalen)} {mana}   "
+            if struggle:
+                x+=1
+                if x%2==0 and x!=0:
+                    attacks+="\n"
+                attacks+=f"{x+1}.struggle{" "*(15-len("struggle"))}    "
             while True:
                 clear()
                 print(
 f"""---------------------------------------
-|            {other.name}
-|            {"#"*math.ceil(8*other.health/other.maxhealth)}{"#"*(8-math.ceil(8*other.health/other.maxhealth))}({other.health}/{other.maxhealth})
+|                {other.name}
+|                {clr(f"{"#"*math.ceil(8*other.health/other.maxhealth)}{" "*(8-math.ceil(8*other.health/other.maxhealth))}({other.health}/{other.maxhealth})",hc(other.health/other.maxhealth)[0],hc(other.health/other.maxhealth)[1],hc(other.health/other.maxhealth)[2])}
 |
 |{self.name}
-|{"#"*math.ceil(8*self.health/self.maxhealth)}{"#"*(8-math.ceil(8*self.health/self.maxhealth))}({self.health}/{self.maxhealth})
+|{clr(f"{"#"*math.ceil(8*self.health/self.maxhealth)}{" "*(8-math.ceil(8*self.health/self.maxhealth))}({self.health}/{self.maxhealth})",hc(self.health/self.maxhealth)[0],hc(self.health/self.maxhealth)[1],hc(self.health/self.maxhealth)[2])}
 ---------------------------------------
+{clr(f"{"#"*math.ceil(8*self.mana/self.maxmana)}{" "*(8-math.ceil(8*self.mana/self.maxmana))}({self.mana}/{self.maxmana})",0,0,255)}
 {attacks}""")
                 user=input(">")
                 try:
@@ -75,11 +109,19 @@ f"""---------------------------------------
                 except:
                     print("Not a valid input")
                     input(">")
+                    self.health-=1
                     continue
                 try:
+                    if struggle:
+                        if user-1==x:
+                            return ("struggle",5,None,"atk",strgl)
+                        else:
+                            n=0/0
+                    if self.mana<self.moves[user-1][2]:
+                        n=0/0
                     return self.moves[user-1]
                 except:
-                    print("Out of range")
+                    print("Unavailable move")
                     input(">")
                     continue
 
@@ -101,5 +143,8 @@ def generate_name():
     else:
         sufix=""
     return prefix+midname+sufix
+
+def hc(num):
+    return (int(math.floor(215*(1-num)))+40, int(math.floor(215*(num)))+40, 21)
     
 

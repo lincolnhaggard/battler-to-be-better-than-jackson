@@ -1,6 +1,17 @@
 import math
 import random
 
+
+def dmg(self,value,other):
+    self.damage=value
+
+def heal(self,value,other):
+    self.heal=value
+
+def strgl(self,value,other):
+    self.damage=value
+    self.recoil=math.floor(value/2)
+
 def invis(self,value,other):
     self.dodge=math.floor(80-(80*(0.916^math.floor(value))))
     self.d_timer=2

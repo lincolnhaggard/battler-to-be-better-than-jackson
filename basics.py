@@ -97,3 +97,6 @@ def makechoice(choices):
             print("Out of range")
             input(">")
             continue
+    
+def clr(text,r,g,b,end="\x1b[0m"):
+    return f"\x1b[38;2;{r};{g};{b}m{text}{end}"
