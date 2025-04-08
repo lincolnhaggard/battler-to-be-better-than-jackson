@@ -1,7 +1,7 @@
 import random
 
 
-def start_battle(cont1,cont2,bot2):
+def start_battle(cont1,cont2,bot2=True):
     cont1.start_battle()
     cont2.start_battle()
 
@@ -9,7 +9,7 @@ def start_battle(cont1,cont2,bot2):
         battle_turn(cont1,cont2,bot2)
     if cont2.health>0:
         print(f"{cont2.name} was victorious")
-    elif cont1.heath>0:
+    elif cont1.health>0:
         print(f"{cont1.name} was victorious")
     else:
         print("it was a tie")
@@ -36,7 +36,10 @@ def battle_turn(cont1,cont2,bot2):
             scont=cont2
             bot1=False
     
-
+    if not bot1:
+        fcont.print_battle_ui(scont)
+    if not bot2:
+        scont.print_battle_ui(fcont)
     fcont.attack(scont,bot1)
     if scont.health>0:
         scont.attack(fcont,bot2)
