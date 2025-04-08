@@ -63,7 +63,7 @@ class Character:
         else:
             print("Not enough mana, you should not be able to see this mesage")
             input(">")
-        print(self.damage)
+        self.damage=math.ceil(self.damage)
         if self.damage>0:
             total_damage=0
             dodged_count=0
@@ -82,29 +82,51 @@ class Character:
                     other.health-=self.damage
                 else:
                     dodged_count+=1
-            if self.multi_hit>1:
-                if hit_count>1:
-                    print(f"You hit the enemy {hit_count} times for a total of {total_damage} damge")
-                    if dodged_count>0:
-                        print(f"The enemy dodge {dodged_count} of your attacks")
-                elif hit_count==1:
-                    print(f"You hit the enemy {hit_count} time for a total of {total_damage} damge")
-                    if dodged_count>0:
-                        print(f"The enemy dodge {dodged_count} of your attacks")
+            if isbot:
+                if self.multi_hit>1:
+                    if hit_count>1:
+                        print(f"The enemy hit you {hit_count} times for a total of {total_damage} damge")
+                        if dodged_count>0:
+                            print(f"You dodged {dodged_count} of the enemies attacks")
+                    elif hit_count==1:
+                        print(f"The enemy hit you {hit_count} time for a total of {total_damage} damge")
+                        if dodged_count>0:
+                            print(f"You dodged {dodged_count} of the enemies attacks")
+                    else:
+                        print("You dodge all of the enemies attacks")
                 else:
-                    print("The enemy dodge all of your attacks")
+                    if dodged_count==1:
+                        print("You dodged")
+                    else:
+                        print(f"The enemy hit you for {total_damage} damage")
+                input(">")
             else:
-                if dodged_count==1:
-                    print("The enemy dodged")
+                if self.multi_hit>1:
+                    if hit_count>1:
+                        print(f"You hit the enemy {hit_count} times for a total of {total_damage} damge")
+                        if dodged_count>0:
+                            print(f"The enemy dodged {dodged_count} of your attacks")
+                    elif hit_count==1:
+                        print(f"You hit the enemy {hit_count} time for a total of {total_damage} damge")
+                        if dodged_count>0:
+                            print(f"The enemy dodged {dodged_count} of your attacks")
+                    else:
+                        print("The enemy dodged all of your attacks")
                 else:
-                    print(f"You hit the enemy for {total_damage} damage")
+                    if dodged_count==1:
+                        print("The enemy dodged")
+                    else:
+                        print(f"You hit the enemy for {total_damage} damage")
+                input(">")
 
     def choose_move(self,other,isbot):
         if isbot:
-            chioces=[]
+            choices=[]
             for i in self.moves:
                 if i[2]<self.mana:
-                    pass
+                    choices.append(i)
+            if len(choices)<=0:
+                return ("struggle",5,None,"atk",strgl)
             return random.choice(list(self.moves))
         else:
             attacks=""
