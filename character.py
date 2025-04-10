@@ -8,7 +8,7 @@ MOVE_VALUES={"name":0,'typ':1,"value":2,"cost":3,"multi":4,"func":5}
 
 NAMES=readfile("names.txt")
 
-ABRIVES={"atk":"attack","spd":"speed","mgc":"magic","dmg":"attack"}
+ABRIVES={"atk":"attack","spd":"speed","mgc":"magic","dmg":"attack","hl":"health"}
 
 
 class Character:
