@@ -3,6 +3,14 @@ from character import Character
 from battle import start_battle
 from class_stats import CLASS_STATS
 import os
+import pickle
+from level import level
+
+
+lev=level()
+print(lev)
+input()
+
 
 
 saves=os.listdir("saves")
@@ -25,11 +33,16 @@ if save=="make new save file":
         if confirm=="y" or confirm=="yes":
             break
     save=name
+    clear()
+    print("Choose your class: ")
+    player=Character(makechoice(list(CLASS_STATS.keys())))
+    with open(f"saves/{save}.pkl","wb") as file:
+        pickle.dump((player,level),file)
 
+else:
+    with open(f"saves/{save}.pkl","wb") as file:
+        player,level=pickle.load(file)
 
-clear()
-print("Choose your class: ")
-player=Character(makechoice(list(CLASS_STATS.keys())))
 
 
 
