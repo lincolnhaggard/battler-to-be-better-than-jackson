@@ -7,10 +7,10 @@ class level:
 
     def generate(self):
         colums=10
-        rows=8
-        maxrooms=5
-        minrooms=3
-        maxpaths=3
+        rows=4
+        maxrooms=3
+        minrooms=1
+        maxpaths=2
         minpaths=1
         self.colums=colums
         self.rows=rows
@@ -18,7 +18,7 @@ class level:
             if x==0:
                 toapp=[None]*rows
                 paths={}
-                options=[0,1,2,3,4]
+                options=list(range(self.rows))
                 random.shuffle(options)
                 for i in range(3):
                     choice=options.pop(0)
@@ -38,55 +38,83 @@ class level:
                             toapp[y]=room()
                             paths[y]="ready"
                             rooms+=1
-                choice=random.randint(0,4)
-                toapp[choice]=room()
-                paths[choice]=None
                 options=[]
                 for x,i in enumerate(toapp):
                         if i!=None:
                             options.append(x)
-                for i in list(prepaths.keys()):
-                    options2=options.copy()
-                    prepaths[i]=[]
-                    for _ in range(random.randint(minpaths,maxpaths)):
-                        if len(options2)>1:
-                            prepaths[i].append(options2.pop(random.randint(0,len(options2)-1)))
-                        else:
-                            prepaths[i].append(options2.pop(0))
-                            break
-                    del options2
-                    
+                options3=options.copy()
+                if len(prepaths)*maxpaths<len(options):
+                    for i in list(prepaths.keys()):
+                        options2=options.copy()
+                        prepaths[i]=[]
+                        for _ in range(len(options)):
+                            if len(options2)>1:
+                                prepaths[i].append(options2.pop(random.randint(0,len(options2)-1)))
+                            else:
+                                prepaths[i].append(options2.pop(0))
+                                
+                        del options2
+                else:
+                    while len(options3)>0:
+                        options3=options.copy()
+                        for i in list(prepaths.keys()):
+                            options2=options.copy()
+                            prepaths[i]=[]
+                            for _ in range(random.randint(minpaths,maxpaths)):
+                                if len(options2)>1:
+                                    prepaths[i].append(options2.pop(random.randint(0,len(options2)-1)))
+                                    if prepaths[i][-1] in options3:
+                                        options3.remove(prepaths[i][-1])
+                                else:
+                                    prepaths[i].append(options2.pop(0))
+                                    if prepaths[i][-1] in options3:
+                                        options3.remove(prepaths[i][-1])
+                                    break
+                                    
+                            del options2
+                        
                 self.stage.append(toapp)
                 self.stage.append(paths)
     def __str__(self):
         height=self.rows
-        width=self.colums*2
+        width=self.colums*10
         screen=[]
         for i in range(width):
             screen.append([])
             for x in range(height):
-                screen[-1].append("")
+                screen[-1].append(" ")
         for x,i in enumerate(self.stage):
             if isinstance(i,list):
                 for y,k in enumerate(i):
                     if k!=None:
-                        screen[x][y]=str(k)[0]
-                    else:
-                        screen[x][y]=" "
+                        screen[x*5][y]=str(k)[0]
+            
             else:
                 for k in range(self.rows):
                     try:
-                        screen[x][k]=f" {i[k]} {" "*(20-len(str(i[k])))}"
+                        path=i[k]
+                        #between -4 and 4, 9 units of space
+                        screen[x*5-4][k]="-"
+                        for j in path:
+                            height=0
+                            increase=k-j
+                            increase/=7
+                            screen[x*5+4][j]="-"
+                            for u in range(7):
+                                height+=increase
+                                screen[x*5-3+u][k+min(height)]="-"
                     except:
-                        screen[x][k]=f"  {" "*(20)}"
+                        pass
         screen2=[]
         for i in range(height):
             screen2.append([])
             for x in range(width):
-                screen2[-1].append("")
+                screen2[-1].append(" ")
         for k,i in enumerate(screen):
             for y,x in enumerate(i):
+                print(y,len(screen2))
                 screen2[y][k]=x
+                
         toret=""
         for i in screen2:
             for x in i:
@@ -103,16 +131,16 @@ class room:
     def __init__(self):
         chance=random.randint(1,100)
         if chance<=10:
-            self.type="shop"
+            self.type="Sshop"
         elif chance<=20:
-            self.type="elite"
+            self.type="Lelite"
         elif chance<=30:
-            self.type="rest"
+            self.type="Rrest"
         elif chance<=40:
-            self.type="chest"
+            self.type="Cchest"
         elif chance<=60:
-            self.type="event"
+            self.type="Vevent"
         else:
-            self.type="enemy"
+            self.type="Eenemy"
     def __str__(self):
         return self.type
