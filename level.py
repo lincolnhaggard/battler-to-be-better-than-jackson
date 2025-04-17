@@ -7,7 +7,13 @@ class level:
 
     def generate(self):
         colums=10
-        rows=5
+        rows=8
+        maxrooms=5
+        minrooms=3
+        maxpaths=3
+        minpaths=1
+        self.colums=colums
+        self.rows=rows
         for x in range(colums):
             if x==0:
                 toapp=[None]*rows
@@ -22,14 +28,16 @@ class level:
                 self.stage.append(paths)
             else:
                 prepaths=self.stage[-1]
-                toapp=[]
+                toapp=[None]*self.rows
                 paths={}
-                for y in range(rows):
-                    if random.randint(1,3)<=2:
-                        toapp.append(room())
-                        paths[y]="ready"
-                    else:
-                        toapp.append(None)
+                rooms=0
+                y=0
+                while rooms<minrooms:
+                    for y in range(rows):
+                        if random.randint(1,3)==1 and rooms<maxrooms:
+                            toapp[y]=room()
+                            paths[y]="ready"
+                            rooms+=1
                 choice=random.randint(0,4)
                 toapp[choice]=room()
                 paths[choice]=None
@@ -39,22 +47,20 @@ class level:
                             options.append(x)
                 for i in list(prepaths.keys()):
                     options2=options.copy()
-                    prepaths[i]=[options2.pop(random.randint(0,len(options2)-1))]
-                    if len(options2)>1:
-                        prepaths[i].append(options2.pop(random.randint(0,len(options2)-1)))
-                    if len(options2)>1:
-                        if random.randint(1,2)==1:
-                            try:
-                                prepaths[i].append(options2.pop(random.randint(0,len(options2)-1)))
-                            except:
-                                print(len(options2))
-                    else:
-                        prepaths[i].append(options2.pop(0))
+                    prepaths[i]=[]
+                    for _ in range(random.randint(minpaths,maxpaths)):
+                        if len(options2)>1:
+                            prepaths[i].append(options2.pop(random.randint(0,len(options2)-1)))
+                        else:
+                            prepaths[i].append(options2.pop(0))
+                            break
+                    del options2
+                    
                 self.stage.append(toapp)
                 self.stage.append(paths)
     def __str__(self):
-        height=10
-        width=100
+        height=self.rows
+        width=self.colums*2
         screen=[]
         for i in range(width):
             screen.append([])
@@ -68,8 +74,11 @@ class level:
                     else:
                         screen[x][y]=" "
             else:
-                for y,k in enumerate(list(i.values())):
-                    screen[x][y]=f" {k} {" "*(10-len(str(k)))}"
+                for k in range(self.rows):
+                    try:
+                        screen[x][k]=f" {i[k]} {" "*(20-len(str(i[k])))}"
+                    except:
+                        screen[x][k]=f"  {" "*(20)}"
         screen2=[]
         for i in range(height):
             screen2.append([])
