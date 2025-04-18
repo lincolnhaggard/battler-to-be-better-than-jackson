@@ -6,7 +6,6 @@ import os
 import pickle
 from level import level
 
-
 lev=level()
 print(lev)
 input()

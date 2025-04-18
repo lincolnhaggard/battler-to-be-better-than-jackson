@@ -1,8 +1,10 @@
 import random
+import math
 
 class level:
     def __init__(self):
         self.stage=[]
+        self.playerpos=[None,None]
         self.generate()
 
     def generate(self):
@@ -96,13 +98,52 @@ class level:
                         #between -4 and 4, 9 units of space
                         screen[x*5-4][k]="-"
                         for j in path:
-                            height=0
-                            increase=k-j
+                            height2=0
+                            increase=j-k
                             increase/=7
                             screen[x*5+4][j]="-"
+                            
                             for u in range(7):
-                                height+=increase
-                                screen[x*5-3+u][k+min(height)]="-"
+                                height2+=increase
+                                if increase<0:
+                                    #nightmare if statement block
+                                    if int(math.ceil(height2+increase))<int(math.ceil(height2)):
+                                        if screen[x*5-3+u][k+int(math.ceil(height2))]=="-":
+                                            screen[x*5-3+u][k+int(math.ceil(height2))]="+"
+                                            if screen[x*5-3+u][k+int(math.ceil(height2))-1]==" ":
+                                                screen[x*5-3+u][k+int(math.ceil(height2))-1]="-"
+                                        elif screen[x*5-3+u][k+int(math.ceil(height2))]=="\\":
+                                            screen[x*5-3+u][k+int(math.ceil(height2))]="x"
+                                        elif screen[x*5-3+u][k+int(math.ceil(height2))]=="x" or screen[x*5-3+u][k+int(math.ceil(height2))]=="+":
+                                            screen[x*5-3+u][k+int(math.ceil(height2))]="#"
+                                        elif screen[x*5-3+u][k+int(math.ceil(height2))]==" ":
+                                            screen[x*5-3+u][k+int(math.ceil(height2))]="/"
+                                    else:
+                                        if screen[x*5-3+u][k+int(math.ceil(height2))]=="/" or screen[x*5-3+u][k+int(math.ceil(height2))]=="\\":
+                                            screen[x*5-3+u][k+int(math.ceil(height2))]="+"
+                                        elif screen[x*5-3+u][k+int(math.ceil(height2))]=="x":
+                                            screen[x*5-3+u][k+int(math.ceil(height2))]="#"
+                                        elif screen[x*5-3+u][k+int(math.ceil(height2))]==" ":
+                                            screen[x*5-3+u][k+int(math.ceil(height2))]="-"
+                                else:
+                                    if int(math.floor(height2+increase))>int(math.floor(height2)):
+                                        if screen[x*5-3+u][k+int(math.floor(height2))]=="-":
+                                            screen[x*5-3+u][k+int(math.floor(height2))]="+"
+                                            if screen[x*5-3+u][k+int(math.floor(height2))+1]==" ":
+                                                screen[x*5-3+u][k+int(math.floor(height2))+1]="-"
+                                        elif screen[x*5-3+u][k+int(math.floor(height2))]=="/":
+                                            screen[x*5-3+u][k+int(math.floor(height2))]="x"
+                                        elif screen[x*5-3+u][k+int(math.floor(height2))]=="x" or screen[x*5-3+u][k+int(math.floor(height2))]=="+":
+                                            screen[x*5-3+u][k+int(math.floor(height2))]="#"
+                                        elif screen[x*5-3+u][k+int(math.floor(height2))]==" ":
+                                            screen[x*5-3+u][k+int(math.floor(height2))]="\\"
+                                    else:
+                                        if screen[x*5-3+u][k+int(math.floor(height2))]=="/" or screen[x*5-3+u][k+int(math.floor(height2))]=="\\":
+                                            screen[x*5-3+u][k+int(math.floor(height2))]="+"
+                                        elif screen[x*5-3+u][k+int(math.floor(height2))]=="x":
+                                            screen[x*5-3+u][k+int(math.floor(height2))]="#"
+                                        elif screen[x*5-3+u][k+int(math.floor(height2))]==" ":
+                                            screen[x*5-3+u][k+int(math.floor(height2))]="-"
                     except:
                         pass
         screen2=[]
@@ -112,7 +153,6 @@ class level:
                 screen2[-1].append(" ")
         for k,i in enumerate(screen):
             for y,x in enumerate(i):
-                print(y,len(screen2))
                 screen2[y][k]=x
                 
         toret=""
@@ -121,6 +161,8 @@ class level:
                 toret+=x
             toret+="\n"
         return toret
+    def choose_path(self):
+        pass
         
             
 
