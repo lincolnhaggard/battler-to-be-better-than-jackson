@@ -1,5 +1,6 @@
 import random
 import math
+from basics import *
 
 class level:
     def __init__(self):
@@ -89,7 +90,7 @@ class level:
             if isinstance(i,list):
                 for y,k in enumerate(i):
                     if k!=None:
-                        screen[x*5][y]=str(k)[0]
+                        screen[x*5][y]=k.first_char()
             
             else:
                 for k in range(self.rows):
@@ -161,8 +162,41 @@ class level:
                 toret+=x
             toret+="\n"
         return toret
+
     def choose_path(self):
-        pass
+        print(self)
+        if self.playerpos[0]==None:
+            choice=[]
+            for i in self.stage[0]:
+                if i!=None:
+                    choice.append(i)
+            user=makechoice(choice,True)
+            count=0
+            newuser=-1
+            while count<user+1:
+                newuser+=1
+                if self.stage[0][newuser]!=None:
+                    count+=1
+            self.stage[0][newuser].open()
+            self.playerpos[0]=0
+            self.playerpos[1]=newuser
+        else:
+            choice=[]
+            for i in self.stage[self.playerpos[0]+1][self.playerpos[1]]:
+                choice.append(self.stage[self.playerpos[0]+2][i])
+            user=makechoice(choice,True)
+            print(user)
+            count=0
+            newuser=-1
+            while count<user+1:
+                newuser+=1
+                if self.stage[0][newuser]!=None:
+                    count+=1
+                    print(count)
+            self.stage[0][newuser].open()
+            self.playerpos[0]+=2
+            self.playerpos[1]=newuser
+        
         
             
 
@@ -184,5 +218,12 @@ class room:
             self.type="Vevent"
         else:
             self.type="Eenemy"
+
+    def open(self):
+        print(f"{self.__str__()} has been entered")
+    
     def __str__(self):
-        return self.type
+        return self.type[1:]
+    
+    def first_char(self):
+        return self.type[0]

@@ -5,10 +5,11 @@ from class_stats import CLASS_STATS
 import os
 import pickle
 from level import level
-
 lev=level()
-print(lev)
-input()
+while True:
+    
+    lev.choose_path()
+    input()
 
 
 
