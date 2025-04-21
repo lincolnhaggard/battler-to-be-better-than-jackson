@@ -5,12 +5,22 @@ from class_stats import CLASS_STATS
 import os
 import pickle
 from level import level
-lev=level()
-while True:
-    
-    lev.choose_path()
-    input()
 
+"""
+todo:
+ |add bosses
+ |add the different rooms
+    |enemy
+    |evet
+    |elite
+    |rest
+    |shop
+ |add combat
+ |add leveling
+ |add class skills
+ |do saves last, to save all the variables
+
+"""
 
 
 saves=os.listdir("saves")

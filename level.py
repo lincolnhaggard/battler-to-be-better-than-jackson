@@ -12,7 +12,7 @@ class level:
         colums=10
         rows=4
         maxrooms=3
-        minrooms=1
+        minrooms=2
         maxpaths=2
         minpaths=1
         self.colums=colums
@@ -185,15 +185,13 @@ class level:
             for i in self.stage[self.playerpos[0]+1][self.playerpos[1]]:
                 choice.append(self.stage[self.playerpos[0]+2][i])
             user=makechoice(choice,True)
-            print(user)
             count=0
             newuser=-1
             while count<user+1:
                 newuser+=1
-                if self.stage[0][newuser]!=None:
+                if self.stage[self.playerpos[0]+2][newuser]!=None:
                     count+=1
-                    print(count)
-            self.stage[0][newuser].open()
+            self.stage[self.playerpos[0]+2][newuser].open()
             self.playerpos[0]+=2
             self.playerpos[1]=newuser
         

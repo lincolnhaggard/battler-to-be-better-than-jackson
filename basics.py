@@ -80,7 +80,7 @@ def editfile(file_name,varlist,line):
 def clear():
     print("\033[H\033[2J",end="")
 
-def makechoice(choices,num=False):
+def makechoice(choices,donum=False):
     while True:
         for num,text in enumerate(choices):
             print(f"{num+1}.{text}")
@@ -92,11 +92,11 @@ def makechoice(choices,num=False):
             input(">")
             continue
         try:
-            if num:
-                print("num")
+            if donum:
+                
                 return user-1
             else:
-                
+
                 return choices[user-1]
         except:
             print("Out of range")
